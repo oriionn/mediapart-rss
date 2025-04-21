@@ -34,6 +34,7 @@ export default new Elysia({ prefix: "/news" }).get(
 
     for (let itemRaw of items.slice(0, query.items)) {
       let item = itemRaw.item;
+      // @ts-ignore
       let $ = $perPage[itemRaw.page];
 
       let title = $(item).find(".teaser__title a").text();
