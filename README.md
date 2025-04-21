@@ -1,15 +1,27 @@
-# mediapart-rss
+# Mediapart RSS
+Mediapart RSS est un petit serveur HTTP créé pour créer des flux RSS à partir de Médiapart.
 
-To install dependencies:
+## Pourquoi ?
+Lorsque j'ai voulu configuré un système de flux RSS pour mon [glance](https://github.com/glanceapp/glance), j'ai voulu ajouter Médiapart dans ces flux. J'ai donc créé ces flux RSS qui récupèrent les dernières publications de Médiapart et les convertissent en flux RSS.
 
-```bash
-bun install
-```
+## Installation
+### Prérequis
+- Bun
 
-To run:
+### Installation
+1. Clonez le dépôt : `git clone https://github.com/oriionn/mediapart-rss.git`
+2. Installez les dépendances : `bun install`
+3. Lancez le serveur : `bun start`
 
-```bash
-bun run index.ts
-```
+### Utilisation
+Il y a deux flux RSS disponibles :
+- `/investigation` qui récupère les dernières enquêtes de Médiapart.
+- `/news` qui récupère les dernières dépêches AFP publiés sur Médiapart.
 
-This project was created using `bun init` in bun v1.2.10. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+Il y a également deux paramètres disponibles (optionnels) :
+- `limit` : limite le nombre d'articles retournés (par défaut : 10)
+- `format` : format de sortie (par défaut : rss)
+  Les formats disponibles sont :
+  - `json` : retourne les données au format JSON
+  - `rss` : retourne les données au format RSS 2.
+  - `atom` : retourne les données au format Atom 1.0.
