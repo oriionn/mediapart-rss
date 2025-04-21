@@ -1,6 +1,6 @@
 {
   "name": "mediapart-rss",
-  "module": "index.ts",
+  "module": "src/index.ts",
   "type": "module",
   "private": true,
   "devDependencies": {
@@ -10,6 +10,8 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "cheerio": "^1.0.0",
+    "elysia": "^1.2.25",
     "feed": "^4.2.2"
   }
 }
