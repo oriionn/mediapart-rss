@@ -1,36 +1,20 @@
-import { feed } from "../utils/feed";
+import { feed, sendFeed } from "../utils/feed";
 import { FeedType } from "../models/feed";
 import { Elysia, t } from "elysia";
 import * as cheerio from "cheerio";
 import { RSSFormat } from "../models/rss";
+import { fetchItems } from "../utils/request";
 
 export default new Elysia({ prefix: "/news" }).get(
   "/",
   async ({ set, query }) => {
     let newsFeed = feed(FeedType.NEWS);
 
-    let items = [];
-    const $perPage = {};
-
-    let page = 1;
-    while (items.length < query.items) {
-      let req = await fetch(
-        `https://www.mediapart.fr/journal/fil-dactualites?page=${page}`,
-      );
-      if (!req.ok && page === 1) throw new Error(`Failed to fetch news feed`);
-      if (!req.ok && page > 1) continue;
-      let html = await req.text();
-
-      let $ = cheerio.load(html);
-      let pageItemsRaw = $(".news__list__content .block");
-      let pageItems = pageItemsRaw.map((index, item) => ({ page, item }));
-      // @ts-ignore
-      $perPage[page] = $;
-
-      items.push(...pageItems);
-
-      page++;
-    }
+    let { items, $perPage } = await fetchItems(
+      "https://www.mediapart.fr/journal/fil-dactualites",
+      query.items,
+      ".news__list__content .block",
+    );
 
     for (let itemRaw of items.slice(0, query.items)) {
       let item = itemRaw.item;
@@ -62,29 +46,17 @@ export default new Elysia({ prefix: "/news" }).get(
       });
     }
 
-    let format = query.format;
-    switch (format) {
-      case RSSFormat.JSON:
-        set.headers = {
-          "Content-Type": "application/json",
-        };
-        return newsFeed.json1();
-      case RSSFormat.RSS:
-        set.headers = {
-          "Content-Type": "application/rss+xml",
-        };
-        return newsFeed.rss2();
-      default:
-        set.headers = {
-          "Content-Type": "application/atom+xml",
-        };
-        return newsFeed.atom1();
-    }
+    let d = sendFeed(query.format, newsFeed);
+
+    set.headers = {
+      "Content-Type": d.contentType,
+    };
+    return d.content;
   },
   {
     query: t.Object({
       items: t.Number({ default: 10, min: 1 }),
-      format: t.Enum(RSSFormat, { default: RSSFormat.ATOM }),
+      format: t.Enum(RSSFormat, { default: RSSFormat.RSS }),
     }),
   },
 );
