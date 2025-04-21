@@ -34,6 +34,7 @@ export default new Elysia({ prefix: "/investigation" }).get(
     // @ts-ignore
     $perPage[0] = $;
 
+    console.log(items.length);
     for (let itemRaw of items.slice(0, query.items)) {
       let item = itemRaw.item;
       // @ts-ignore

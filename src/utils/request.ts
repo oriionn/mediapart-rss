@@ -28,7 +28,6 @@ export async function fetchItems(
     $perPage[page] = $;
 
     itemList.push(...pageItems);
-
     page++;
   }
 
