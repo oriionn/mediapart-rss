@@ -1,0 +1,1 @@
+import { Feed } from "feed";
