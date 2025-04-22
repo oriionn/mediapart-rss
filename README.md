@@ -25,3 +25,6 @@ Il y a également deux paramètres disponibles (optionnels) :
   - `json` : retourne les données au format JSON
   - `rss` : retourne les données au format RSS 2.
   - `atom` : retourne les données au format Atom 1.0.
+
+### Variables d'environnement
+- `PAGE_LIMIT` : nombre limites de pages que le serveur peut retourner (par défaut : 5)
